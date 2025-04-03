@@ -388,7 +388,8 @@ CREATE VIEW vistaTicket AS
 SELECT 
     tic.idTicket, 
     tic.fecha AS fechaTicket, 
-    tic.total,  
+    tic.total, 
+    tic.subtotal,
 
     -- Información del empleado
     emp.idEmpleado,
@@ -458,7 +459,7 @@ INNER JOIN persona cliP ON c.idPersona = cliP.idPersona
 INNER JOIN ciudad cliPC ON cliP.idCiudad = cliPC.idCiudad  
 INNER JOIN estado cliE ON cliPC.idEstado = cliE.idEstado
 LEFT JOIN usuario uC ON uC.idUsuario = cliP.idUsuario  -- Permite clientes sin usuario
-LEFT JOIN tarjeta t ON tic.numTarjeta = t.numTarjeta;  -- Permite tickets sin tarjeta
+inner JOIN tarjeta t ON tic.numTarjeta = t.numTarjeta;  -- Permite tickets sin tarjeta
 
     SELECT * FROM vistaTicket;
     
