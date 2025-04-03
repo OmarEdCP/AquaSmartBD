@@ -866,27 +866,29 @@ DELIMITER ;
 DELIMITER ||
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_insertCategoria`(
 in v_nombre varchar(75), 
-in v_descripcion longtext
+in v_descripcion longtext,
+in v_precio double
 )
 BEGIN
-INSERT INTO categoria VALUES (default,v_nombre,v_descripcion,default);
+INSERT INTO categoria VALUES (default,v_nombre,v_descripcion,default, v_precio);
 END|| 
 DELIMITER ;
-drop procedure sp_insertCategoria;
-
+select * from categoria;
 DELIMITER ||
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_updateCategoria`(
 in v_idCategoria int,
 in v_nombre varchar(75), 
 in v_descripcion longtext, 
-in v_estatus int
+in v_estatus int,
+in v_precio double
 )
 BEGIN
 UPDATE categoria 
 SET 
 nombre = v_nombre,
 descripcion = v_descripcion,
-estatus = v_estatus
+estatus = v_estatus,
+precio = v_precio
 WHERE
    idCategoria = v_idCategoria;
 END || 
@@ -969,3 +971,26 @@ WHERE
 END || 
 DELIMITER ;
 
+select * from usuario;
+
+DELIMITER $$
+CREATE PROCEDURE validar_usuario (
+    IN p_usuario VARCHAR(65),
+    IN p_contrasenia VARCHAR(65)
+)
+BEGIN
+    DECLARE v_estado INT DEFAULT 0;
+
+    -- Verificar si el usuario y la contraseña coinciden y si el usuario está activo
+    SELECT estatus INTO v_estado
+    FROM usuario
+    WHERE nombre = p_usuario AND contrasenia = md5(p_contrasenia)
+    LIMIT 1;
+
+    IF v_estado = 1 THEN
+        SELECT TRUE AS resultado;  -- Usuario activo y correcto
+    ELSE
+        SELECT FALSE AS resultado;  -- Usuario inactivo o incorrecto
+    END IF;
+END $$
+DELIMITER ;

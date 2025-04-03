@@ -148,6 +148,7 @@ CREATE TABLE categoria (
     nombre VARCHAR(75) NOT NULL,
     descripcion LONGTEXT,
     estatus INT NOT NULL DEFAULT 1,
+    precio double not null,
     CONSTRAINT pk_idCategoria PRIMARY KEY (IdCategoria)
 );
 
