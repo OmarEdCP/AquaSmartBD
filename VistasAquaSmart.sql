@@ -1,4 +1,4 @@
-use aquasmart;
+-- use aquasmart;
 
 -- VISTA CARGO
 CREATE VIEW vistaCargo AS

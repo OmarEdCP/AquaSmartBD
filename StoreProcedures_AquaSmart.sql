@@ -1,4 +1,4 @@
-USE aquasmart;
+-- USE aquasmart;
 -- PROPIEDAD TICKET DETALLE
 
 /* CARGO / 0 */
