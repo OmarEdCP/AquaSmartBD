@@ -1,4 +1,4 @@
--- DROP DATABASE IF EXISTS aquasmart;
+DROP DATABASE IF EXISTS aquasmart;
 CREATE DATABASE aquasmart;
 USE aquasmart;
 
