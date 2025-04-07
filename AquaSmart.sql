@@ -177,6 +177,7 @@ CREATE TABLE ticket (
     fecha DATETIME NOT NULL,
     total DOUBLE NOT NULL,
     subtotal DOUBLE NOT NULL,
+    estatus INT NOT NULL DEFAULT 1,
     idEmpleado INT NOT NULL,
     idCliente INT NOT NULL,
     numTarjeta VARCHAR(16) NOT NULL,

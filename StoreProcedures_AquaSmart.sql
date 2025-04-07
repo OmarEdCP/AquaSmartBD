@@ -822,7 +822,7 @@ in v_idCliente int ,
 in v_numTarjeta varchar(16)
 )
 BEGIN
-INSERT INTO ticket VALUES (default,v_fecha,v_total,v_subtotal,v_idEmpleado,v_idCliente,v_numTarjeta);
+INSERT INTO ticket VALUES (default,v_fecha,v_total,v_subtotal,default,v_idEmpleado,v_idCliente,v_numTarjeta);
 END|| 
 DELIMITER ;
 
@@ -832,6 +832,7 @@ in v_idTicket int,
 in v_fecha datetime, 
 in v_total double ,
 in v_subtotal double,
+in v_estatus int,
 in v_idEmpleado int, 
 in v_idCliente int ,
 in v_numTarjeta varchar(16)
@@ -842,6 +843,7 @@ SET
   fecha=v_fecha,
   total=v_total,
   subtotal = v_subtotal,
+  estatus = v_estatus,
   idEmpleado=v_idEmpleado,
   idCliente=v_idCliente,
   numTarjeta=v_numTarjeta
@@ -861,6 +863,18 @@ WHERE
 END || 
 DELIMITER ;
 
+DELIMITER ||
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_desactiveTicket`(
+in v_idTicket int
+)
+BEGIN
+UPDATE ticket
+set estatus =0
+WHERE
+     idTicket=v_idTicket;
+END || 
+DELIMITER ;
+
 /* CATEGORIA / 13 */
 
 DELIMITER ||
@@ -873,6 +887,7 @@ BEGIN
 INSERT INTO categoria VALUES (default,v_nombre,v_descripcion,default, v_precio);
 END|| 
 DELIMITER ;
+
 select * from categoria;
 DELIMITER ||
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_updateCategoria`(

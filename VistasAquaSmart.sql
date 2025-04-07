@@ -390,6 +390,7 @@ SELECT
     tic.fecha AS fechaTicket, 
     tic.total, 
     tic.subtotal,
+    tic.estatus AS estatusTicket,
 
     -- Información del empleado
     emp.idEmpleado,
