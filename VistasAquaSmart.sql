@@ -1,4 +1,4 @@
--- use aquasmart;
+use aquasmart;
 
 -- VISTA CARGO
 CREATE VIEW vistaCargo AS
@@ -468,68 +468,166 @@ inner JOIN tarjeta t ON tic.numTarjeta = t.numTarjeta;  -- Permite tickets sin t
     
 -- VISTA DE DETALLE SERVICIO
 CREATE VIEW vistaDetalleServicio AS
-    SELECT 
-        ds.idDetalle,
-        ds.descripcion AS descripcionDetalle,
-        ds.fecha AS fechaDetalle,
-        cli.idCliente,  
-        cliP.nombre AS nombreCliente, 
-        cliP.apellidoM AS clienteApellidoM, 
-        cliP.apellidoP AS clienteApellidoP,
-        cliP.edad AS clienteEdad, 
-        cliP.estatus AS estatusPersonaCliente, 
-        cliP.email AS emailCliente, 
-        cliP.telefono AS telefonoCliente,
-        cliPC.idCiudad AS idCiudadCliente,  
-        cliPC.nombreCiudad AS nombreCiudadCliente,
-        cliE.idEstado AS idEstadoCliente,
-        cliE.nombreEstado AS nombreEstadoCliente,
-        uC.idUsuario AS idUsuarioCliente,
-        uC.nombre AS nombreUsuarioCliente,
-        uC.rol AS rolCliente,
+SELECT 
+    ds.idDetalle,
+    ds.descripcion AS descripcionDetalle,
+    ds.fecha AS fechaDetalle,
+    ds.estatus AS estatusDetalle,
 
-        s.idServicio,
-        s.estatus AS estatusServicio,
-        prop.numExt AS numExtPropiedad,
-        prop.numInt AS numIntPropiedad,
-        prop.calle AS callePropiedad,
-        prop.colonia AS coloniaPropiedad,
-        prop.latitud AS latitudPropiedad,
-        prop.longitud AS longitudPropiedad,
-        prop.codigoP AS codigoPropiedad,
-        prop.foto AS fotoPropiedad,
+    -- Información del Cliente (detalleServicio)
+    c.idCliente AS idClienteDetalle,
+    per.idPersona AS personaClienteDetalle,
+    per.nombre AS nombreClienteDetalle,
+    per.apellidoP AS apellidoPClienteDetalle,
+    per.apellidoM AS apellidoMClienteDetalle,
+    per.edad AS edadClienteDetalle,
+    per.estatus AS estatusPersonaClienteDetalle,
+    per.email AS emailClienteDetalle,
+    per.telefono AS telefonoClienteDetalle,
+    ciudadC.idCiudad AS idCiudadClienteDetalle,
+    ciudadC.nombreCiudad AS nombreCiudadClienteDetalle,
+    estadoC.idEstado AS idEstadoClienteDetalle,
+    estadoC.nombreEstado AS nombreEstadoClienteDetalle,
+    uC.idUsuario AS idUsuarioClienteDetalle,
+    uC.nombre AS nombreUsuarioClienteDetalle,
+    uC.rol AS rolClienteDetalle,
+    uC.foto AS fotoClienteDetalle,
+    uC.estatus AS estatusUsuarioClienteDetalle,
+    uC.lastToken AS lastTokenClienteDetalle,
+    uC.dateLastToken AS dateTokenClienteDetalle,
 
-        l.idLectura,
-        l.flujo,
-        l.pulsaciones,
-        l.fecha AS fechaLectura,
-        l.estatus AS estatusLectura,
+    -- Información del Servicio
+    s.idServicio,
+    s.estatus AS estatusServicio,
 
-        -- Información del ticket
-        t.idTicket,
-        t.fecha AS fechaTicket,  
-        t.total AS totalTicket,
-                t.subtotal,
-        ticTac.numTarjeta, 
-        ticTac.mes, 
-        ticTac.año, 
-        ticTac.nombreTitular
+    -- Categoría del servicio
+    cat.idCategoria,
+    cat.nombre AS nombreCategoria,
+    cat.descripcion AS descripcionCategoria,
+    cat.estatus AS estatusCategoria,
+    cat.precio AS precioCategoria,
 
-    FROM 
-        detalleServicio ds
+    -- Propiedad del servicio
+    p.idPropiedad,
+    p.numExt,
+    p.numInt,
+    p.calle,
+    p.colonia,
+    p.latitud,
+    p.longitud,
+    p.codigoP,
+    p.foto AS fotoPropiedad,
+    p.estatus AS estatusPropiedad,
+    ciudadP.idCiudad AS idCiudadPropiedad,
+    ciudadP.nombreCiudad AS nombreCiudadPropiedad,
+    estadoP.idEstado AS idEstadoPropiedad,
+    estadoP.nombreEstado AS nombreEstadoPropiedad,
 
-    INNER JOIN cliente cli ON ds.idCliente = cli.idCliente
-    INNER JOIN persona cliP ON cli.idPersona = cliP.idPersona 
-    INNER JOIN ciudad cliPC ON cliPC.idCiudad = cliP.idCiudad
-    INNER JOIN estado cliE ON cliE.idEstado = cliPC.idEstado
-    INNER JOIN usuario uC ON uC.idUsuario = cliP.idUsuario
-    INNER JOIN servicio s ON ds.idServicio = s.idServicio
-    INNER JOIN propiedad prop ON s.idPropiedad = prop.idPropiedad
-    INNER JOIN lectura l ON ds.idLectura = l.idLectura
-    INNER JOIN ticket t ON ds.idTicket = t.idTicket
-    INNER JOIN tarjeta ticTac ON t.numTarjeta = ticTac.numTarjeta;
-    
- -- drop view vistaDetalleServicio;
+    -- Medidor de la propiedad
+    mP.idMedidor AS idMedidorPropiedad,
+    mP.nombre AS nombreMedidorPropiedad,
+    mP.modelo AS modeloMedidorPropiedad,
+    mP.cantidad AS cantidadMedidorPropiedad,
+    mP.estatus AS estatusMedidorPropiedad,
+    mP.precio AS precioMedidorPropiedad,
+
+    -- Información de la Lectura
+    lec.idLectura,
+    lec.estatus AS estatusLectura,
+    lec.flujo,
+    lec.pulsaciones,
+    lec.fecha AS fechaLectura,
+    mL.idMedidor AS idMedidorLectura,
+    mL.nombre AS nombreMedidorLectura,
+    mL.modelo AS modeloMedidorLectura,
+    mL.cantidad AS cantidadMedidorLectura,
+    mL.estatus AS estatusMedidorLectura,
+    mL.precio AS precioMedidorLectura,
+
+    -- Información del Ticket
+    t.idTicket,
+    t.fecha AS fechaTicket,
+    t.total,
+    t.subtotal,
+    t.estatus AS estatusTicket,
+
+    -- Empleado
+    e.idEmpleado,
+    e.rfc,
+    car.idCargo,
+    car.nombreCargo,
+    car.descripcion AS descripcionCargo,
+    empP.idPersona AS personaEmpleado,
+    empP.nombre AS nombreEmpleado,
+    empP.apellidoP AS apellidoPEmpleado,
+    empP.apellidoM AS apellidoMEmpleado,
+    empP.edad AS edadEmpleado,
+    empP.estatus AS estatusPersonaEmpleado,
+    empP.email AS emailEmpleado,
+    empP.telefono AS telefonoEmpleado,
+    ciudadE.idCiudad AS idCiudadEmpleado,
+    ciudadE.nombreCiudad AS nombreCiudadEmpleado,
+    estadoE.idEstado AS idEstadoEmpleado,
+    estadoE.nombreEstado AS nombreEstadoEmpleado,
+    uE.idUsuario AS idUsuarioEmpleado,
+    uE.nombre AS nombreUsuarioEmpleado,
+    uE.rol AS rolEmpleado,
+    uE.foto AS fotoEmpleado,
+    uE.estatus AS estatusUsuarioEmpleado,
+    uE.lastToken AS lastTokenEmpleado,
+    uE.dateLastToken AS dateTokenEmpleado,
+
+    -- Cliente del ticket
+    cliT.idCliente AS idClienteTicket,
+    cliP.idPersona AS personaClienteTicket,
+    cliP.nombre AS nombreClienteTicket,
+    cliP.apellidoP AS apellidoPClienteTicket,
+    cliP.apellidoM AS apellidoMClienteTicket,
+    cliP.edad AS edadClienteTicket,
+    cliP.estatus AS estatusPersonaClienteTicket,
+    cliP.email AS emailClienteTicket,
+    cliP.telefono AS telefonoClienteTicket,
+
+    -- Tarjeta
+    tar.numTarjeta,
+    tar.cvv,
+    tar.mes,
+    tar.año,
+    tar.nombreTitular,
+    tar.estatus AS estatusTarjeta
+
+FROM detalleServicio ds
+INNER JOIN cliente c ON ds.idCliente = c.idCliente
+INNER JOIN persona per ON c.idPersona = per.idPersona
+INNER JOIN ciudad ciudadC ON per.idCiudad = ciudadC.idCiudad
+INNER JOIN estado estadoC ON ciudadC.idEstado = estadoC.idEstado
+LEFT JOIN usuario uC ON per.idUsuario = uC.idUsuario
+
+INNER JOIN servicio s ON ds.idServicio = s.idServicio
+INNER JOIN categoria cat ON s.idCategoria = cat.idCategoria
+INNER JOIN propiedad p ON s.idPropiedad = p.idPropiedad
+INNER JOIN ciudad ciudadP ON p.idCiudad = ciudadP.idCiudad
+INNER JOIN estado estadoP ON ciudadP.idEstado = estadoP.idEstado
+INNER JOIN medidor mP ON p.idMedidor = mP.idMedidor
+
+INNER JOIN lectura lec ON ds.idLectura = lec.idLectura
+INNER JOIN medidor mL ON lec.idMedidor = mL.idMedidor
+
+INNER JOIN ticket t ON ds.idTicket = t.idTicket
+
+INNER JOIN empleado e ON t.idEmpleado = e.idEmpleado
+INNER JOIN cargo car ON e.idCargo = car.idCargo
+INNER JOIN persona empP ON e.idPersona = empP.idPersona
+INNER JOIN ciudad ciudadE ON empP.idCiudad = ciudadE.idCiudad
+INNER JOIN estado estadoE ON ciudadE.idEstado = estadoE.idEstado
+LEFT JOIN usuario uE ON empP.idUsuario = uE.idUsuario
+
+INNER JOIN cliente cliT ON t.idCliente = cliT.idCliente
+INNER JOIN persona cliP ON cliT.idPersona = cliP.idPersona
+
+INNER JOIN tarjeta tar ON t.numTarjeta = tar.numTarjeta;
+
+-- drop view vistaDetalleServicio;
 
 DESCRIBE detalleServicio;
 DESCRIBE cliente;

@@ -195,6 +195,7 @@ CREATE TABLE detalleServicio (
     idDetalle INT NOT NULL AUTO_INCREMENT,
     descripcion LONGTEXT,
     fecha DATETIME NOT NULL,
+    estatus int not null default 1,
     idCliente INT NOT NULL,
     idServicio INT NOT NULL,
     idLectura INT NOT NULL,

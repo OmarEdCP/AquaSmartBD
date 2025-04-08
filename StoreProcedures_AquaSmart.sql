@@ -945,7 +945,7 @@ in v_idLectura int,
 in v_idTicket int
 )
 BEGIN
-INSERT INTO detalleservicio VALUES (default,v_descripcion,v_subtotal,v_total,v_fecha,v_idCliente,v_idServicio,v_idLectura,v_idTicket);
+INSERT INTO detalleservicio VALUES (default,v_descripcion,v_fecha,default,v_idCliente,v_idServicio,v_idLectura,v_idTicket);
 END|| 
 DELIMITER ;
 
@@ -954,6 +954,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_updateDetalleServicio`(
 in v_idDetalle int,
 in v_descripcion longtext, 
 in v_fecha datetime, 
+in v_estatus int,
 in v_idCliente int ,
 in v_idServicio int ,
 in v_idLectura int, 
@@ -963,9 +964,8 @@ BEGIN
 UPDATE detalleservicio 
 SET 
 descripcion =v_descripcion,
-subtotal=v_subtotal,
-total=v_total,
 fecha=v_fecha,
+estatus = v_estatus,
 idCliente=v_idCliente,
 idServicio=v_idServicio,
 idLectura=v_idLectura,
@@ -986,7 +986,18 @@ WHERE
 END || 
 DELIMITER ;
 
-select * from usuario;
+DELIMITER ||
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_desactiveDetalleServicio`(
+in v_idDetalle int
+)
+BEGIN
+UPDATE detalleservicio 
+SET
+estatus = 0
+WHERE
+   idDetalle = v_idDetalle;
+END || 
+DELIMITER ;
 
 DELIMITER $$
 CREATE PROCEDURE validar_usuario (
